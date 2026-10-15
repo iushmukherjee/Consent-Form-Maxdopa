@@ -105,24 +105,28 @@
                         </div>
                     </div>
 
-                    <!-- Speciality -->
+                    <!-- Speciality Dropdown -->
                     <div>
                         <label for="speciality" class="block text-sm font-semibold text-slate-800 mb-1.5">
                             Speciality <span class="text-alteus-600">*</span>
                         </label>
                         <div class="relative rounded-lg shadow-sm">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 z-10">
                                 <i class="fa-solid fa-stethoscope"></i>
                             </div>
-                            <input type="text" id="speciality" name="speciality" required list="specialityOptions" placeholder="e.g. Neurologist, Physician"
-                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-alteus-600 focus:border-alteus-600 transition-all text-sm">
-                            <datalist id="specialityOptions">
-                                <option value="Neurologist">
-                                <option value="General Physician">
-                                <option value="Psychiatrist">
-                                <option value="Movement Disorder Specialist">
-                                <option value="Geriatrician">
-                            </datalist>
+                            <select id="speciality" name="speciality" required
+                                class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-alteus-600 focus:border-alteus-600 transition-all text-sm appearance-none cursor-pointer">
+                                <option value="" disabled selected>Select Speciality</option>
+                                <option value="Neurophyisician">Neurophyisician</option>
+                                <option value="Neurosurgeon">Neurosurgeon</option>
+                                <option value="Consultant Physician">Consultant Physician</option>
+                                <option value="Movement Disorder Specialist">Movement Disorder Specialist</option>
+                                <option value="General Surgeon">General Surgeon</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -486,7 +490,7 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            // Generate clean text-based PDF with doctor details, prescription response, and signature[span_1](start_span)[span_1](end_span)
+            // Generate clean text-based PDF matching frontend branding
             downloadPdfBtn.addEventListener('click', () => {
                 const doctorName = document.getElementById('doctorName').value.trim() || 'Doctor';
                 const speciality = document.getElementById('speciality').value.trim();
@@ -510,22 +514,23 @@
                     const pageWidth = pdf.internal.pageSize.getWidth();
                     const margin = 20;
                     const contentWidth = pageWidth - margin * 2;
-                    let y = 22;
+                    let y = 20;
+
+                    // PDF Header matching frontend style
+                    pdf.setFillColor(15, 23, 42); // Navy background box
+                    pdf.rect(0, 0, pageWidth, 35, 'F');
 
                     pdf.setFont('helvetica', 'bold');
-                    pdf.setFontSize(16);
-                    pdf.setTextColor(15, 23, 42);
+                    pdf.setFontSize(14);
+                    pdf.setTextColor(255, 255, 255);
                     pdf.text('Consent Form for Maxdopa Bytes', margin, y);
-                    y += 6;
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(242, 101, 34);
-                    pdf.text('ALTEUS BIOGENICS INITIATIVE', margin, y);
                     y += 7;
-                    pdf.setDrawColor(226, 232, 240);
-                    pdf.setLineWidth(0.5);
-                    pdf.line(margin, y, pageWidth - margin, y);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(9);
+                    pdf.setTextColor(242, 101, 34); // Alteus orange
+                    pdf.text('ALTEUS BIOGENICS INITIATIVE', margin, y);
 
-                    y += 12;
+                    y = 45;
                     pdf.setFont('helvetica', 'normal');
                     pdf.setFontSize(10);
                     pdf.setTextColor(71, 85, 105);
@@ -537,12 +542,12 @@
                     pdf.setTextColor(5, 150, 105);
                     pdf.text('Consent Verified', pageWidth - margin, y, { align: 'right' });
 
-                    y += 17;
+                    y += 12;
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(12);
                     pdf.setTextColor(15, 23, 42);
                     pdf.text('DOCTOR DETAILS', margin, y);
-                    y += 9;
+                    y += 8;
 
                     const addDetail = (label, value) => {
                         pdf.setFont('helvetica', 'bold');
@@ -563,7 +568,7 @@
                     addDetail('Practising area:', practisingArea);
                     addDetail('Prescribes Levodopa + Benserazide:', prescribingAnswer);
 
-                    y += 12;
+                    y += 10;
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(12);
                     pdf.setTextColor(15, 23, 42);
@@ -610,3 +615,4 @@
     </script>
 </body>
 </html>
+
