@@ -491,24 +491,42 @@
             });
 
             // Helper function to load image as base64 for jsPDF
-            function getBase64ImageFromURL(url) {
+            function loadImage(url) {
                 return new Promise((resolve) => {
                     const img = new Image();
                     img.crossOrigin = 'Anonymous';
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-                        resolve(canvas.toDataURL('image/png'));
-                    };
+                    img.onload = () => resolve(img);
                     img.onerror = () => resolve(null);
                     img.src = url;
                 });
             }
 
-            // Generate PDF with a solid white rounded wrapper box directly behind the Maxdopa logo
+            // Generate flattened badge image with white wrapper background directly drawn onto a canvas
+            function getWrappedLogoDataUrl(imgElement) {
+                return new Promise((resolve) => {
+                    if (!imgElement) {
+                        resolve(null);
+                        return;
+                    }
+                    const c = document.createElement('canvas');
+                    // Add padding around the logo inside the wrapper badge
+                    c.width = imgElement.width + 16;
+                    c.height = imgElement.height + 12;
+                    const cx = c.getContext('2d');
+                    
+                    // Fill solid white background box (wrapper)
+                    cx.fillStyle = '#ffffff';
+                    cx.beginPath();
+                    cx.roundRect(0, 0, c.width, c.height, 4);
+                    cx.fill();
+                    
+                    // Draw the original logo image centered on top of the white box
+                    cx.drawImage(imgElement, 8, 6);
+                    resolve(c.toDataURL('image/png'));
+                });
+            }
+
+            // Generate PDF with pre-wrapped solid white badge for Maxdopa logo
             downloadPdfBtn.addEventListener('click', async () => {
                 const doctorName = document.getElementById('doctorName').value.trim() || 'Doctor';
                 const speciality = document.getElementById('speciality').value.trim();
@@ -527,9 +545,18 @@
                         throw new Error('The PDF library could not be loaded.');
                     }
 
-                    // Preload logos
-                    const maxdopaLogoData = await getBase64ImageFromURL('https://i.ibb.co/gZJDDsRF/CILAPAM-VA-2026-Apr-Print-File-Final-1.png');
-                    const alteusLogoData = await getBase64ImageFromURL('https://i.ibb.co/YTQ3kfPh/Untitled-2-1-2.png');
+                    // Preload raw logo images
+                    const maxdopaImg = await loadImage('https://i.ibb.co/gZJDDsRF/CILAPAM-VA-2026-Apr-Print-File-Final-1.png');
+                    const alteusImg = await loadImage('https://i.ibb.co/YTQ3kfPh/Untitled-2-1-2.png');
+                    
+                    // Create the flattened white-wrapped badge image
+                    const wrappedMaxdopaData = await getWrappedLogoDataUrl(maxdopaImg);
+                    const alteusData = alteusImg ? (() => {
+                        const tc = document.createElement('canvas');
+                        tc.width = alteusImg.width; tc.height = alteusImg.height;
+                        tc.getContext('2d').drawImage(alteusImg, 0, 0);
+                        return tc.toDataURL('image/png');
+                    })() : null;
 
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -549,27 +576,23 @@
                     pdf.text('Consent Form for', margin, y + 6);
                     
                     let textWidth = pdf.getTextWidth('Consent Form for ');
-                    let boxX = margin + textWidth + 1.5;
-                    let boxY = y + 0.5;
-                    let boxW = 32;
-                    let boxH = 9.5;
+                    let badgeX = margin + textWidth + 1.5;
+                    let badgeY = y - 1;
+                    let badgeW = 28;
+                    let badgeH = 9.5;
 
-                    // Draw solid white wrapper background box for Maxdopa logo
-                    pdf.setFillColor(255, 255, 255);
-                    pdf.roundedRect(boxX, boxY, boxW, boxH, 1.5, 1.5, 'F');
-
-                    // Draw Maxdopa logo inside the white box
-                    if (maxdopaLogoData) {
-                        pdf.addImage(maxdopaLogoData, 'PNG', boxX + 1.5, boxY + 1.5, boxW - 3, boxH - 3, undefined, 'FAST');
+                    // Draw the pre-wrapped Maxdopa badge image (guaranteed solid white background)
+                    if (wrappedMaxdopaData) {
+                        pdf.addImage(wrappedMaxdopaData, 'PNG', badgeX, badgeY, badgeW, badgeH, undefined, 'FAST');
                     }
 
                     // Header Title text part 2 ("Bytes")
-                    pdf.text('Bytes', boxX + boxW + 3, y + 6);
+                    pdf.text('Bytes', badgeX + badgeW + 3, y + 6);
 
                     // Subtitle layout: "[Alteus Logo] Initiative"
                     y += 14;
-                    if (alteusLogoData) {
-                        pdf.addImage(alteusLogoData, 'PNG', margin, y, 22, 6, undefined, 'FAST');
+                    if (alteusData) {
+                        pdf.addImage(alteusData, 'PNG', margin, y, 22, 6, undefined, 'FAST');
                     }
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(9);
