@@ -81,7 +81,7 @@
             <!-- Information Banner -->
             <div class="bg-slate-50 border-b border-slate-200 p-5 sm:p-6">
                 <p class="text-sm text-slate-600 leading-relaxed">
-                    Please complete the doctor details and digital signature below to grant official video usage consent for the <strong>Maxdopa Bytes</strong> educational initiative by <strong>Alteus Biogenics</strong>[span_0](start_span)[span_0](end_span).
+                    Please complete the doctor details and digital signature below to grant official video usage consent for the <strong>Maxdopa Bytes</strong> educational initiative by <strong>Alteus Biogenics</strong>.
                 </p>
             </div>
 
@@ -490,8 +490,26 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            // Generate clean text-based PDF matching frontend branding
-            downloadPdfBtn.addEventListener('click', () => {
+            // Helper function to load image as base64 for jsPDF
+            function getBase64ImageFromURL(url) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.crossOrigin = 'Anonymous';
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        resolve(canvas.toDataURL('image/png'));
+                    };
+                    img.onerror = () => resolve(null);
+                    img.src = url;
+                });
+            }
+
+            // Generate PDF with actual logos embedded
+            downloadPdfBtn.addEventListener('click', async () => {
                 const doctorName = document.getElementById('doctorName').value.trim() || 'Doctor';
                 const speciality = document.getElementById('speciality').value.trim();
                 const practisingArea = document.getElementById('practisingArea').value.trim();
@@ -509,28 +527,45 @@
                         throw new Error('The PDF library could not be loaded.');
                     }
 
+                    // Preload logos
+                    const maxdopaLogoData = await getBase64ImageFromURL('https://i.ibb.co/gZJDDsRF/CILAPAM-VA-2026-Apr-Print-File-Final-1.png');
+                    const alteusLogoData = await getBase64ImageFromURL('https://i.ibb.co/YTQ3kfPh/Untitled-2-1-2.png');
+
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                     const pageWidth = pdf.internal.pageSize.getWidth();
                     const margin = 20;
                     const contentWidth = pageWidth - margin * 2;
-                    let y = 20;
+                    let y = 15;
 
-                    // PDF Header matching frontend style
-                    pdf.setFillColor(15, 23, 42); // Navy background box
-                    pdf.rect(0, 0, pageWidth, 35, 'F');
+                    // PDF Header Banner (Navy Background matching front page)
+                    pdf.setFillColor(15, 23, 42);
+                    pdf.rect(0, 0, pageWidth, 42, 'F');
 
+                    // Header Title layout: "Consent Form for [Maxdopa Logo] Bytes"
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(14);
                     pdf.setTextColor(255, 255, 255);
-                    pdf.text('Consent Form for Maxdopa Bytes', margin, y);
-                    y += 7;
+                    pdf.text('Consent Form for', margin, y + 6);
+                    
+                    let textWidth = pdf.getTextWidth('Consent Form for ');
+                    if (maxdopaLogoData) {
+                        // Embedded Maxdopa Logo image in header
+                        pdf.addImage(maxdopaLogoData, 'PNG', margin + textWidth + 2, y, 32, 9);
+                    }
+                    pdf.text('Bytes', margin + textWidth + 36, y + 6);
+
+                    // Subtitle layout: "[Alteus Logo] Initiative"
+                    y += 14;
+                    if (alteusLogoData) {
+                        pdf.addImage(alteusLogoData, 'PNG', margin, y, 22, 6);
+                    }
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(9);
-                    pdf.setTextColor(242, 101, 34); // Alteus orange
-                    pdf.text('ALTEUS BIOGENICS INITIATIVE', margin, y);
+                    pdf.setTextColor(242, 101, 34); // Alteus Orange
+                    pdf.text('INITIATIVE', margin + 25, y + 4.5);
 
-                    y = 45;
+                    y = 50;
                     pdf.setFont('helvetica', 'normal');
                     pdf.setFontSize(10);
                     pdf.setTextColor(71, 85, 105);
@@ -568,7 +603,7 @@
                     addDetail('Practising area:', practisingArea);
                     addDetail('Prescribes Levodopa + Benserazide:', prescribingAnswer);
 
-                    y += 10;
+                    y += 8;
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(12);
                     pdf.setTextColor(15, 23, 42);
@@ -583,7 +618,7 @@
                     pdf.setFontSize(10);
                     pdf.setTextColor(51, 65, 85);
                     pdf.text(statementLines, margin + 8, y + 3);
-                    y += statementHeight + 14;
+                    y += statementHeight + 12;
 
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(12);
@@ -615,4 +650,3 @@
     </script>
 </body>
 </html>
-
