@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent Form for Maxdopa Bytes - Alteus Biogenics</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF for reliable, text-based PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Custom Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        alteus: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316',
+                            600: '#f26522', // Official Brand Orange
+                            700: '#ea580c',
+                            800: '#c2410c',
+                        },
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        #signatureCanvas {
+            touch-action: none;
+            cursor: crosshair;
+        }
+        .alteus-header-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <header class="alteus-header-bg text-white shadow-xl border-b-4 border-alteus-600">
+        <div class="max-w-4xl mx-auto px-4 py-8 sm:px-8 flex flex-col items-center text-center gap-3">
+            
+            <!-- Title: Consent Form for [Maxdopa Logo] Bytes -->
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-2xl sm:text-3xl font-extrabold font-display leading-tight text-white">
+                <span>Consent Form for</span>
+                <img src="https://i.ibb.co/gZJDDsRF/CILAPAM-VA-2026-Apr-Print-File-Final-1.png" alt="Maxdopa Logo" class="h-8 sm:h-10 w-auto object-contain inline-block bg-white/10 px-2 py-0.5 rounded-md">
+                <span>Bytes</span>
+            </div>
+
+            <!-- Subtitle: [Alteus Logo] Initiative -->
+            <div class="flex items-center justify-center gap-2 mt-1">
+                <img src="https://i.ibb.co/YTQ3kfPh/Untitled-2-1-2.png" alt="Alteus Logo" class="h-5 sm:h-6 w-auto object-contain">
+                <span class="text-sm sm:text-base font-bold tracking-wider uppercase text-alteus-500">Initiative</span>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="max-w-3xl w-full mx-auto px-4 py-8 flex-grow">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            
+            <!-- Information Banner -->
+            <div class="bg-slate-50 border-b border-slate-200 p-5 sm:p-6">
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Please complete the doctor details and digital signature below to grant official video usage consent for the <strong>Maxdopa Bytes</strong> educational initiative by <strong>Alteus Biogenics</strong>[span_0](start_span)[span_0](end_span).
+                </p>
+            </div>
+
+            <!-- Form Body -->
+            <form id="consentForm" class="p-6 sm:p-8 space-y-6" onsubmit="return false;">
+                
+                <!-- Doctor Name & Speciality Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Doctor's Name -->
+                    <div>
+                        <label for="doctorName" class="block text-sm font-semibold text-slate-800 mb-1.5">
+                            Name <span class="text-alteus-600">*</span>
+                        </label>
+                        <div class="relative rounded-lg shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+                            <input type="text" id="doctorName" name="doctorName" required placeholder="Dr. Firstname Lastname"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-alteus-600 focus:border-alteus-600 transition-all text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Speciality -->
+                    <div>
+                        <label for="speciality" class="block text-sm font-semibold text-slate-800 mb-1.5">
+                            Speciality <span class="text-alteus-600">*</span>
+                        </label>
+                        <div class="relative rounded-lg shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-stethoscope"></i>
+                            </div>
+                            <input type="text" id="speciality" name="speciality" required list="specialityOptions" placeholder="e.g. Neurologist, Physician"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-alteus-600 focus:border-alteus-600 transition-all text-sm">
+                            <datalist id="specialityOptions">
+                                <option value="Neurologist">
+                                <option value="General Physician">
+                                <option value="Psychiatrist">
+                                <option value="Movement Disorder Specialist">
+                                <option value="Geriatrician">
+                            </datalist>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Practising Area -->
+                <div>
+                    <label for="practisingArea" class="block text-sm font-semibold text-slate-800 mb-1.5">
+                        Practising Area <span class="text-alteus-600">*</span>
+                    </label>
+                    <div class="relative rounded-lg shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <input type="text" id="practisingArea" name="practisingArea" required placeholder="e.g. City / Clinic / Hospital Name"
+                            class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-alteus-600 focus:border-alteus-600 transition-all text-sm">
+                    </div>
+                </div>
+
+                <!-- Prescribes Levodopa + Benserazide Options -->
+                <div class="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200">
+                    <label class="block text-sm font-semibold text-slate-800 mb-3">
+                        Prescribes Levodopa + Benserazide <span class="text-alteus-600">*</span>
+                    </label>
+                    <div class="flex items-center gap-8">
+                        <label class="inline-flex items-center cursor-pointer group">
+                            <input type="radio" name="prescribesLevodopa" value="Yes" class="w-4 h-4 text-alteus-600 focus:ring-alteus-600 border-slate-300" required>
+                            <span class="ml-2.5 text-sm font-medium text-slate-700 group-hover:text-alteus-700">Yes</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer group">
+                            <input type="radio" name="prescribesLevodopa" value="No" class="w-4 h-4 text-alteus-600 focus:ring-alteus-600 border-slate-300">
+                            <span class="ml-2.5 text-sm font-medium text-slate-700 group-hover:text-alteus-700">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Consent Declaration Checkbox -->
+                <div class="bg-orange-50/70 border border-orange-200 rounded-xl p-4 sm:p-5">
+                    <div class="flex items-start gap-3">
+                        <div class="flex items-center h-5 mt-1">
+                            <input id="consentCheckbox" name="consentCheckbox" type="checkbox" required
+                                class="w-5 h-5 text-alteus-600 border-slate-300 rounded focus:ring-alteus-600 cursor-pointer">
+                        </div>
+                        <label for="consentCheckbox" class="text-sm font-medium text-slate-800 leading-relaxed cursor-pointer select-none">
+                            I hereby provide my consent to Alteus Biogenics for the use of this video for educational and awareness purposes, intending to promote better patient outcomes.
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex flex-wrap justify-between items-center mb-2 gap-2">
+                        <label class="block text-sm font-semibold text-slate-800">
+                            Signature <span class="text-alteus-600">*</span>
+                        </label>
+                        <div class="flex items-center gap-3 text-xs">
+                            <button type="button" id="undoCanvasBtn" class="font-medium text-slate-600 hover:text-slate-800 flex items-center gap-1 transition-colors">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span>Undo</span>
+                            </button>
+                            <button type="button" id="clearCanvasBtn" class="font-semibold text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Clear Canvas</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="relative bg-white border-2 border-dashed border-slate-300 hover:border-alteus-500 rounded-xl transition-all overflow-hidden">
+                        <canvas id="signatureCanvas" class="w-full h-44 bg-slate-50/50 block"></canvas>
+                        
+                        <!-- Canvas Placeholder -->
+                        <div id="canvasPlaceholder" class="absolute inset-0 flex items-center justify-center pointer-events-none text-slate-400 text-sm">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-signature text-slate-400"></i>
+                                Draw your signature here
+                            </span>
+                        </div>
+
+                        <!-- Signature Recorded Badge -->
+                        <div id="signedBadge" class="hidden absolute top-3 right-3 bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                            <span>Signature Recorded</span>
+                        </div>
+                    </div>
+                    <p id="signatureError" class="hidden text-xs font-medium text-red-500 mt-1.5">
+                        Please provide your signature on the canvas before submitting.
+                    </p>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-2">
+                    <button type="button" id="submitConsentBtn" class="w-full bg-alteus-600 hover:bg-alteus-700 active:bg-alteus-800 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-alteus-600/25 hover:shadow-alteus-600/40 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 text-base">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Submit Consent Form</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <div id="summaryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden my-8 transform transition-all">
+            
+            <!-- Modal Header -->
+            <div class="bg-emerald-600 text-white p-5 sm:p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-circle-check text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">Consent Submission Confirmed</h3>
+                        <p class="text-xs text-emerald-100">Official Summary Record</p>
+                    </div>
+                </div>
+                <button id="closeModalBtn" class="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Downloadable Document Summary -->
+            <div id="downloadableSummary" class="p-6 sm:p-8 space-y-6 bg-white">
+                
+                <!-- Summary Printable Header -->
+                <div class="border-b border-slate-200 pb-5 flex justify-between items-start">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 font-display font-bold text-lg text-slate-900">
+                            <span>Consent Form for</span>
+                            <img src="https://i.ibb.co/gZJDDsRF/CILAPAM-VA-2026-Apr-Print-File-Final-1.png" alt="Maxdopa Logo" class="h-6 w-auto object-contain">
+                            <span>Bytes</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
+                            <img src="https://i.ibb.co/YTQ3kfPh/Untitled-2-1-2.png" alt="Alteus Logo" class="h-4 w-auto object-contain">
+                            <span>Initiative</span>
+                        </div>
+                    </div>
+                    <div class="text-right text-xs text-slate-500">
+                        <p>Date: <span id="summaryDate" class="font-semibold text-slate-700"></span></p>
+                        <p>Status: <span class="font-semibold text-emerald-600">Consent Verified</span></p>
+                    </div>
+                </div>
+
+                <!-- Summary Details Table -->
+                <div class="space-y-3 text-sm">
+                    <div class="grid grid-cols-3 py-2 border-b border-slate-100">
+                        <span class="font-semibold text-slate-500">Name:</span>
+                        <span id="summaryName" class="col-span-2 font-bold text-slate-800"></span>
+                    </div>
+                    <div class="grid grid-cols-3 py-2 border-b border-slate-100">
+                        <span class="font-semibold text-slate-500">Speciality:</span>
+                        <span id="summarySpeciality" class="col-span-2 font-medium text-slate-800"></span>
+                    </div>
+                    <div class="grid grid-cols-3 py-2 border-b border-slate-100">
+                        <span class="font-semibold text-slate-500">Practising Area:</span>
+                        <span id="summaryArea" class="col-span-2 font-medium text-slate-800"></span>
+                    </div>
+                    <div class="grid grid-cols-3 py-2 border-b border-slate-100">
+                        <span class="font-semibold text-slate-500">Prescribes Levodopa + Benserazide:</span>
+                        <span id="summaryPrescribesMaxdopa" class="col-span-2 font-medium text-slate-800"></span>
+                    </div>
+                </div>
+
+                <!-- Consent Declaration Quote Box -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed italic">
+                    "I hereby provide my consent to Alteus Biogenics for the use of this video for educational and awareness purposes, intending to promote better patient outcomes."
+                </div>
+
+                <!-- Recorded Signature Display -->
+                <div class="pt-2">
+                    <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Doctor's Signature:</span>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 inline-block min-w-[240px]">
+                        <img id="summarySignatureImg" src="" alt="Doctor's Signature" class="h-20 object-contain">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Action Controls -->
+            <div class="bg-slate-50 p-4 sm:p-6 border-t border-slate-200 flex flex-wrap gap-3 justify-end">
+                <button id="downloadPdfBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all flex items-center gap-2 shadow-md">
+                    <i class="fa-solid fa-file-arrow-down"></i>
+                    <span>Download PDF</span>
+                </button>
+                <button id="resetNewEntryBtn" class="bg-alteus-600 hover:bg-alteus-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all flex items-center gap-2 shadow-md">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New Entry</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-400">
+        <p>&copy; Alteus Biogenics. Educational & Awareness Initiative for Maxdopa Bytes.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Canvas Signature Setup ---
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            const canvasPlaceholder = document.getElementById('canvasPlaceholder');
+            const signedBadge = document.getElementById('signedBadge');
+            const signatureError = document.getElementById('signatureError');
+            const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+            const undoCanvasBtn = document.getElementById('undoCanvasBtn');
+
+            let isDrawing = false;
+            let strokeHistory = [];
+
+            function saveCanvasState() {
+                strokeHistory.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            }
+
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+
+                let tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                if (canvas.width > 0 && canvas.height > 0) {
+                    tempCanvas.getContext('2d').drawImage(canvas, 0, 0);
+                }
+
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                ctx.scale(dpr, dpr);
+
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                if (strokeHistory.length > 0) {
+                    ctx.drawImage(tempCanvas, 0, 0, rect.width, rect.height);
+                }
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            function getCoordinates(e) {
+                const rect = canvas.getBoundingClientRect();
+                let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            function startDrawing(e) {
+                e.preventDefault();
+                saveCanvasState();
+                isDrawing = true;
+                const pos = getCoordinates(e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                
+                canvasPlaceholder.classList.add('hidden');
+                signedBadge.classList.remove('hidden');
+                signatureError.classList.add('hidden');
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const pos = getCoordinates(e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            }
+
+            function stopDrawing(e) {
+                if (isDrawing) {
+                    e.preventDefault();
+                    isDrawing = false;
+                }
+            }
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseleave', stopDrawing);
+
+            canvas.addEventListener('touchstart', startDrawing, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDrawing);
+
+            clearCanvasBtn.addEventListener('click', () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                strokeHistory = [];
+                canvasPlaceholder.classList.remove('hidden');
+                signedBadge.classList.add('hidden');
+            });
+
+            undoCanvasBtn.addEventListener('click', () => {
+                if (strokeHistory.length > 0) {
+                    const previousState = strokeHistory.pop();
+                    ctx.putImageData(previousState, 0, 0);
+                    if (strokeHistory.length === 0) {
+                        canvasPlaceholder.classList.remove('hidden');
+                        signedBadge.classList.add('hidden');
+                    }
+                }
+            });
+
+            const submitBtn = document.getElementById('submitConsentBtn');
+            const consentForm = document.getElementById('consentForm');
+            const summaryModal = document.getElementById('summaryModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const resetNewEntryBtn = document.getElementById('resetNewEntryBtn');
+            const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+            submitBtn.addEventListener('click', () => {
+                if (!consentForm.checkValidity()) {
+                    consentForm.reportValidity();
+                    return;
+                }
+
+                if (strokeHistory.length === 0) {
+                    signatureError.classList.remove('hidden');
+                    canvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
+                // Populate Summary Details
+                document.getElementById('summaryName').textContent = document.getElementById('doctorName').value;
+                document.getElementById('summarySpeciality').textContent = document.getElementById('speciality').value;
+                document.getElementById('summaryArea').textContent = document.getElementById('practisingArea').value;
+                const prescribingAnswer = document.querySelector('input[name="prescribesLevodopa"]:checked').value;
+                document.getElementById('summaryPrescribesMaxdopa').textContent = prescribingAnswer;
+                document.getElementById('summaryDate').textContent = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // Attach Signature Image
+                document.getElementById('summarySignatureImg').src = canvas.toDataURL('image/png');
+
+                // Open Modal
+                summaryModal.classList.remove('hidden');
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                summaryModal.classList.add('hidden');
+            });
+
+            resetNewEntryBtn.addEventListener('click', () => {
+                consentForm.reset();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                strokeHistory = [];
+                canvasPlaceholder.classList.remove('hidden');
+                signedBadge.classList.add('hidden');
+                summaryModal.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Generate clean text-based PDF with doctor details, prescription response, and signature[span_1](start_span)[span_1](end_span)
+            downloadPdfBtn.addEventListener('click', () => {
+                const doctorName = document.getElementById('doctorName').value.trim() || 'Doctor';
+                const speciality = document.getElementById('speciality').value.trim();
+                const practisingArea = document.getElementById('practisingArea').value.trim();
+                const prescribingAnswer = document.querySelector('input[name="prescribesLevodopa"]:checked')?.value || '-';
+                const consentStatement = 'I hereby provide my consent to Alteus Biogenics for the use of this video for educational and awareness purposes, intending to promote better patient outcomes.';
+                const signatureImage = document.getElementById('summarySignatureImg').src;
+                const consentDate = document.getElementById('summaryDate').textContent.trim();
+
+                const originalButtonHtml = downloadPdfBtn.innerHTML;
+                downloadPdfBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating PDF...';
+                downloadPdfBtn.disabled = true;
+
+                try {
+                    if (!window.jspdf || !window.jspdf.jsPDF) {
+                        throw new Error('The PDF library could not be loaded.');
+                    }
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const margin = 20;
+                    const contentWidth = pageWidth - margin * 2;
+                    let y = 22;
+
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(16);
+                    pdf.setTextColor(15, 23, 42);
+                    pdf.text('Consent Form for Maxdopa Bytes', margin, y);
+                    y += 6;
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(242, 101, 34);
+                    pdf.text('ALTEUS BIOGENICS INITIATIVE', margin, y);
+                    y += 7;
+                    pdf.setDrawColor(226, 232, 240);
+                    pdf.setLineWidth(0.5);
+                    pdf.line(margin, y, pageWidth - margin, y);
+
+                    y += 12;
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(71, 85, 105);
+                    pdf.text('Date of consent:', margin, y);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setTextColor(30, 41, 59);
+                    pdf.text(consentDate || new Date().toLocaleDateString('en-IN'), margin + 31, y);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(5, 150, 105);
+                    pdf.text('Consent Verified', pageWidth - margin, y, { align: 'right' });
+
+                    y += 17;
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(15, 23, 42);
+                    pdf.text('DOCTOR DETAILS', margin, y);
+                    y += 9;
+
+                    const addDetail = (label, value) => {
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(71, 85, 105);
+                        pdf.text(label, margin, y);
+                        pdf.setFont('helvetica', 'normal');
+                        pdf.setTextColor(30, 41, 59);
+                        const valueLines = pdf.splitTextToSize(value || '-', contentWidth - 62);
+                        pdf.text(valueLines, margin + 62, y);
+                        y += Math.max(9, valueLines.length * 5.5) + 2;
+                        pdf.setDrawColor(241, 245, 249);
+                        pdf.line(margin, y - 1, pageWidth - margin, y - 1);
+                    };
+
+                    addDetail("Doctor's name:", doctorName);
+                    addDetail('Speciality:', speciality);
+                    addDetail('Practising area:', practisingArea);
+                    addDetail('Prescribes Levodopa + Benserazide:', prescribingAnswer);
+
+                    y += 12;
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(15, 23, 42);
+                    pdf.text('CONSENT DECLARATION', margin, y);
+                    y += 8;
+
+                    const statementLines = pdf.splitTextToSize(consentStatement, contentWidth - 16);
+                    const statementHeight = statementLines.length * 5.5 + 12;
+                    pdf.setFillColor(248, 250, 252);
+                    pdf.roundedRect(margin, y - 4, contentWidth, statementHeight, 2, 2, 'F');
+                    pdf.setFont('helvetica', 'italic');
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(51, 65, 85);
+                    pdf.text(statementLines, margin + 8, y + 3);
+                    y += statementHeight + 14;
+
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(15, 23, 42);
+                    pdf.text("DOCTOR'S SIGNATURE", margin, y);
+                    y += 7;
+
+                    if (signatureImage && signatureImage.startsWith('data:image/')) {
+                        pdf.setDrawColor(226, 232, 240);
+                        pdf.roundedRect(margin, y, 75, 30, 2, 2, 'S');
+                        pdf.addImage(signatureImage, 'PNG', margin + 4, y + 3, 67, 24, undefined, 'FAST');
+                    } else {
+                        pdf.setFont('helvetica', 'normal');
+                        pdf.setFontSize(9);
+                        pdf.text('Signature image unavailable', margin, y + 8);
+                    }
+
+                    const safeName = doctorName.replace(/[^a-zA-Z0-9]/g, '_') || 'Doctor';
+                    pdf.save(`Maxdopa_Consent_Form_${safeName}.pdf`);
+                } catch (err) {
+                    console.error('PDF Generation Error:', err);
+                    alert('Unable to generate the PDF. Please check your internet connection and try again.');
+                } finally {
+                    downloadPdfBtn.innerHTML = originalButtonHtml;
+                    downloadPdfBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
