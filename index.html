@@ -508,7 +508,7 @@
                 });
             }
 
-            // Generate PDF with actual logos embedded
+            // Generate PDF with a solid white rounded wrapper box directly behind the Maxdopa logo
             downloadPdfBtn.addEventListener('click', async () => {
                 const doctorName = document.getElementById('doctorName').value.trim() || 'Doctor';
                 const speciality = document.getElementById('speciality').value.trim();
@@ -536,29 +536,40 @@
                     const pageWidth = pdf.internal.pageSize.getWidth();
                     const margin = 20;
                     const contentWidth = pageWidth - margin * 2;
-                    let y = 15;
+                    let y = 14;
 
                     // PDF Header Banner (Navy Background matching front page)
                     pdf.setFillColor(15, 23, 42);
                     pdf.rect(0, 0, pageWidth, 42, 'F');
 
-                    // Header Title layout: "Consent Form for [Maxdopa Logo] Bytes"
+                    // Header Title text part 1
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(14);
                     pdf.setTextColor(255, 255, 255);
                     pdf.text('Consent Form for', margin, y + 6);
                     
                     let textWidth = pdf.getTextWidth('Consent Form for ');
+                    let boxX = margin + textWidth + 1.5;
+                    let boxY = y + 0.5;
+                    let boxW = 32;
+                    let boxH = 9.5;
+
+                    // Draw solid white wrapper background box for Maxdopa logo
+                    pdf.setFillColor(255, 255, 255);
+                    pdf.roundedRect(boxX, boxY, boxW, boxH, 1.5, 1.5, 'F');
+
+                    // Draw Maxdopa logo inside the white box
                     if (maxdopaLogoData) {
-                        // Embedded Maxdopa Logo image in header
-                        pdf.addImage(maxdopaLogoData, 'PNG', margin + textWidth + 2, y, 32, 9);
+                        pdf.addImage(maxdopaLogoData, 'PNG', boxX + 1.5, boxY + 1.5, boxW - 3, boxH - 3, undefined, 'FAST');
                     }
-                    pdf.text('Bytes', margin + textWidth + 36, y + 6);
+
+                    // Header Title text part 2 ("Bytes")
+                    pdf.text('Bytes', boxX + boxW + 3, y + 6);
 
                     // Subtitle layout: "[Alteus Logo] Initiative"
                     y += 14;
                     if (alteusLogoData) {
-                        pdf.addImage(alteusLogoData, 'PNG', margin, y, 22, 6);
+                        pdf.addImage(alteusLogoData, 'PNG', margin, y, 22, 6, undefined, 'FAST');
                     }
                     pdf.setFont('helvetica', 'bold');
                     pdf.setFontSize(9);
